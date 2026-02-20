@@ -1,123 +1,64 @@
-#  European Weather ETL Pipeline
+# Weather ETL Pipeline
 
-A simple and practical ETL (Extract–Transform–Load) pipeline built with Python.  
-This project retrieves real‑time weather data for major European cities using the Open‑Meteo API, transforms the data, and loads it into a SQLite database.
+This project is a simple data engineering ETL pipeline that fetches current weather data for major European cities using the Open‑Meteo API and stores the results in a SQLite database.  
+A separate query script allows users to view the latest weather for any city stored in the database.
 
----
+## Prerequisites
 
-##  Overview
+- Python 3.x
 
-This pipeline performs the following steps:
+## Setup
 
-### **Extract**
-- Uses Open‑Meteo’s Geocoding API to obtain latitude/longitude for each city.
-- Fetches current weather data for **40+ major European cities**.
+1. Clone or download this repository.
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
-### **Transform**
-- Normalizes API responses.
-- Extracts temperature, weather code, and timestamp.
+## Running the ETL Pipeline
 
-### **Load**
-- Inserts the cleaned data into a SQLite database (`weather.db`).
-- Automatically creates the `weather` table if it does not exist.
+To fetch the latest weather data for all supported European cities, run:
 
----
-
-##  Tech Stack
-
-- **Python 3.x**
-- **SQLite**
-- **Open‑Meteo Weather API**
-- **Open‑Meteo Geocoding API**
-
----
-
----
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/weather-etl.git
-cd weather-etl
-
-Install dependencies:
-
-bash
-pip install -r requirements.txt
-
-
-## Running the Pipeline
-
-Run the ETL script:
-
-bash
+```
 python main.py
-After running:
+```
 
-A SQLite database named weather.db will be created.
+This will create (or update) a SQLite database named `weather.db` and insert the latest weather records.
 
-A table named weather will be populated with the latest weather data.
+## Querying Weather Data
 
-Each run inserts a fresh batch of records.
+To view the most recent weather for a specific city, run:
 
-Cities Included
-The pipeline currently fetches weather for 40+ major European cities, including:
+```
+python weather_query.py
+```
 
-London
+You will be shown a list of available cities and prompted to enter the one you want to view.
 
-Paris
+## Database Schema
 
-Berlin
+The SQLite database `weather.db` contains a table named `weather` with the following columns:
 
-Zurich
+- **id**: Primary key  
+- **city**: City name  
+- **temperature**: Temperature in Celsius  
+- **description**: Weather code from Open‑Meteo  
+- **humidity**: Humidity percentage (may be NULL if not available)  
+- **timestamp**: ISO‑formatted timestamp of when the data was fetched  
 
-Madrid
+## Project Structure
 
-Rome
+```
+weather-etl/
+│
+├── main.py              # ETL pipeline (fetch + load)
+├── weather_query.py     # User weather lookup tool
+├── requirements.txt     # Python dependencies
+└── README.md            # Project documentation
+```
 
-Vienna
+## Notes
 
-Prague
+- The ETL pipeline must be run before using the query script.
+- You can add or remove cities by editing the `EUROPEAN_CITIES` list in `main.py`.
 
-Stockholm
-
-Oslo
-
-Helsinki
-
-Lisbon
-
-Amsterdam
-
-Athens
-
-Reykjavik
-
-…and many more
-
-You can easily add or remove cities in the EUROPEAN_CITIES list inside main.py.
-
-How It Works
-The script geocodes each city to get latitude/longitude.
-
-It calls the Open‑Meteo weather API for current conditions.
-
-The response is transformed into a clean Python dictionary.
-
-The data is inserted into SQLite using Python’s built‑in sqlite3 module.
-
-How to Use the Menu
-Just run:
-
-Code
-python menu.py
-You’ll see:
-
-Code
-=== Weather Menu ===
-1. Run ETL (fetch latest weather)
-2. View weather for a city
-3. Exit
-Pick a number and the script handles the rest.
